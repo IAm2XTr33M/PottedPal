@@ -7,17 +7,68 @@
 body{
     height: 100vh;
     background: rgb(235,202,144);
-    background: linear-gradient(0deg, rgba(235,202,144,1) 0%, rgba(255,255,255,1) 100%);
-}
-
-.header{
-    width: 100vw;
-    height: 100px;
-    background-color: #d1f0b2;
-    box-shadow: 0px 0px 25px 0px #d1f0b2;
+    background: linear-gradient(0deg, #f0eebd 0%, rgba(255,255,255,1) 100%);
 }
 
 h1{
-    width: 100vw;
     text-align: center;
+    color: #ebca90d7;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    text-shadow: 4px 4px 0px black;
+}
+
+.container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainDiv{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    width: 70vw;
+    height: 70vh;
+    background-color: rgba(255, 255, 255, 0.801);
+    border-radius: 3%;
+    box-shadow: 4px 4px 30px 2px rgb(0, 0, 0);
+    transition-duration: 500ms;
+}
+
+.graphMaxWidth{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 90%;
+    height: 60%;
+}
+
+.graphMaxWidth h1{
+    margin: 1%;
+}
+
+.mainDiv:hover{
+    margin-bottom: 5vh;
+    transition-duration: 300ms;
+    background-color: rgba(255, 255, 255, 0.505);
+}
+
+.graph{
+    height: 7%;
+    margin-bottom: 2%;
+}
+
+.backGroundLogo{
+    position: fixed;
+    left: 25vw;
+    filter: blur(5px);
+    pointer-events: none;
+    z-index: -10;
 }

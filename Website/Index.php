@@ -2,6 +2,10 @@
     include_once 'includes/dbh.php';
 
     $name = "";
+    $temp = "";
+    $light = "";
+    $humidity = "";
+    $happy = "";
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +18,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<img src="Img/Logo.png" class="backGroundLogo">
+
+
 <?php
     $sql = "SELECT * FROM users;";
     $result = mysqli_query($conn , $sql);
@@ -22,17 +30,34 @@
     if($resultCheck > 0){
         while ($row = mysqli_fetch_assoc($result)){
             $name = $row['Name'];
+            $temp = $row['Temp'];
+            $light = $row['LightLevel'];
+            $humidity = $row['WaterLevel'];
+            $happy = $row['Happyness'];
         }
     }
 ?>
 
-<div class="header"></div>
-
-<h1><?php echo $name ?></h1>
+<div class="container">
+    <div class="mainDiv">
+        <h1><?php echo $name ?></h1>  
+        
+        <div class="graphMaxWidth">
+            <h1>Temperature</h1>
+            <div class="graph" style="width:<?php echo $temp ?>%;background-color: blue"></div>
+            <h1>Humidity</h1>
+            <div class="graph" style="width:<?php echo $humidity ?>%;background-color: yellow"></div>
+            <h1>Light Level</h1>
+            <div class="graph" style="width:<?php echo $light ?>%;background-color: red"></div>
+            <h1>Happyness</h1>
+            <div class="graph" style="width:<?php echo $happy ?>%;background-color: pink"></div>
+                        
+        </div>
+    </div>
+</div>
 
 <script>
     //alert("My name is <?php echo $name ?>")
 </script>
-
 </body>
 </html>
