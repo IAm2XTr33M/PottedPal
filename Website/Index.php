@@ -18,46 +18,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<img src="Img/Logo.png" class="backGroundLogo">
+test
+<form method="post" action="">
+    <label for="username">Enter id:</label>
+    <input type="text" name="id" id="id">
+    <input type="submit" name="submit" value="Submit">
+</form>
 
 
 <?php
-    $sql = "SELECT * FROM users;";
-    $result = mysqli_query($conn , $sql);
-    $resultCheck = mysqli_num_rows($result);
-
-    if($resultCheck > 0){
-        while ($row = mysqli_fetch_assoc($result)){
-            $name = $row['Name'];
-            $temp = $row['Temp'];
-            $light = $row['LightLevel'];
-            $humidity = $row['WaterLevel'];
-            $happy = $row['Happyness'];
+    if (isset($_POST['submit'])) {
+        $id = $_POST['id'];
+                
+        if ($conn->connect_error) {
+            die('Connection failed: ' . $conn->connect_error);
         }
-    }
-?>
-
-<div class="container">
-    <div class="mainDiv">
-        <h1><?php echo $name ?></h1>  
         
-        <div class="graphMaxWidth">
-            <h1>Temperature</h1>
-            <div class="graph" style="width:<?php echo $temp ?>%;background-color: blue"></div>
-            <h1>Humidity</h1>
-            <div class="graph" style="width:<?php echo $humidity ?>%;background-color: yellow"></div>
-            <h1>Light Level</h1>
-            <div class="graph" style="width:<?php echo $light ?>%;background-color: red"></div>
-            <h1>Happyness</h1>
-            <div class="graph" style="width:<?php echo $happy ?>%;background-color: pink"></div>
-                        
-        </div>
-    </div>
-</div>
+        $sql = "SELECT * FROM users WHERE id = '$id'";
+        
+        $result = $conn->query($sql);
+        
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo $row['Name'];
+                echo $row['Temp'];
+            }
+        } else {
+            echo "No results found.";
+        }
+        
+        $conn->close();
+    }
+    ?>
 
-<script>
-    //alert("My name is <?php echo $name ?>")
-</script>
 </body>
 </html>
