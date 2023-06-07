@@ -15,18 +15,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Potted Pal</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-test
-<form method="post" action="">
-    <label for="username">Enter id:</label>
-    <input type="text" name="id" id="id">
-    <input type="submit" name="submit" value="Submit">
-</form>
+    <div id="Left">
+        <form method="post" action="">
+            <label for="username">Enter id:</label>
+            <input type="text" name="id" id="id">
+            <input type="submit" name="submit" value="Submit">
+        </form>
+    </div>
 
-
-<?php
+    <?php
     if (isset($_POST['submit'])) {
         $id = $_POST['id'];
                 
@@ -40,16 +40,19 @@ test
         
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo $row['Name'];
-                echo $row['Temp'];
+                $name = $row['Name'];
+                $temp = $row['Temp'];
+                $light = $row['Lightlevel'];
+                $humidity = $row['Waterlevel'];
+                $happy = $row['Happyness'];
             }
-        } else {
-            echo "No results found.";
         }
         
         $conn->close();
     }
     ?>
+
+    
 
 </body>
 </html>
