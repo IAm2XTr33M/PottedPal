@@ -26,19 +26,51 @@ unsigned long lastTime = 0;
 // Set timer to 5 seconds (5000)
 unsigned long timerDelay = 5000;
 
+#define sensorPin 32 //D32
+#define sensorLicht 34 //D34
+#define sensorTemp 35 //D35
+
+float temperature = 0;
+float licht = 0;
+float mois = 0;
+
+
+
 void setup() {
   Serial.begin(115200);
+  pinMode(sensorPin, INPUT);
+  pinMode(sensorLicht, INPUT);
+  pinMode(sensorTemp, INPUT);
+
   setupWifi();
-  
 }
 
 void loop() {
-
+  getvalues();
   SendPOSTrequest();
 
 
   Delay(10);
 }
+
+void getvalues(){
+
+  Serial.print("mois:");
+  mois = map(analogRead(sensorPin), 0, 4095, 0, 100)
+  Serial.print(mois);
+  Serial.print(",");
+  Serial.print("licht:");
+  licht = map(analogRead(sensorLicht), 0, 4095, 0, 100)
+  Serial.print(licht);
+  Serial.print(",");
+  Serial.print("temp:");
+  int sensorVal = analogRead(sensorTemp);
+  float voltage = (sensorVal / 4095.0) * 5.0;
+  temperature = (voltage - .5) * 100;
+  Serial.println(temperature);
+  delay(100);
+}
+
 
 void setupWifi(){
   WiFi.begin(ssid, password);
@@ -77,7 +109,7 @@ void SendPOSTrequest(){
       
       // If you need an HTTP request with a content type: application/json, use the following:
       http.addHeader("Content-Type", "application/json");
-      int httpResponseCode = http.POST("{\"id\":\"2\",\"name\":\"test\",\"temp\":\"70\",\"lightLevel\":\"564\",\"waterLevel\":\"45\",\"waterLevel\":\"45\",\"happyness\":\"10\"}");
+      int httpResponseCode = http.POST("{\"id\":\"2\",\"name\":\"test\",\"temp\":\"70\",\"lightLevel\":\"564\",\"waterLevel\":\"45\",\"happyness\":\"10\"}");
 
       // If you need an HTTP request with a content type: text/plain
       //http.addHeader("Content-Type", "text/plain");
