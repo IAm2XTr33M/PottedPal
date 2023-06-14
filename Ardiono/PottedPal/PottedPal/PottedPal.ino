@@ -48,6 +48,10 @@ void setup(){
   pinMode(sensorLicht, INPUT);
   pinMode(sensorTemp, INPUT);
 
+  u8g2.begin();
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_6x13B_mr);
+
   setupWifi();
 }
 
@@ -55,26 +59,85 @@ void loop() {
   getvalues();
   SendPOSTrequest();
 
-delay(1000);
+  u8g2.clearBuffer();
+
+  getFace();
+
+  u8g2.sendBuffer();
+
+  delay(1000);
+}
+
+void getFace(){
+  if(mois < 40){
+    DrawScreen(2,"!","Please make me wet");
+  }
+  else if(mois > 70){
+    DrawScreen(8,"!","Theres too much water");
+  }
+  else if(temperature < 0){
+    DrawScreen(3,"!","It's too cold");
+  }
+  else if(temperature > 32){
+    DrawScreen(9,"!","It's too warm");
+  }
+  else if(licht >60 && temperature > 25){
+    DrawScreen(7,"!","Too much light");
+  }
+  else{
+    DrawScreen(5,"","Potted Pal!");
+  };
 }
 
 
+void DrawScreen(int face,char icon[],char text[]){
+  drawFace(face);
+  if(icon != ""){
+    drawIcon(icon_x, icon_y, icon_width, icon_height, icon_border, icon);
+  }
+  drawCenteredText(text_x, text_y, text);
+}
+
+void drawIcon(int x, int y, int w, int h, int b , char t[]){
+  u8g2.drawStr(x+4,y+12,t);
+  u8g2.drawRFrame(x, y, w, h, b);
+}
+
+void drawCenteredText(int x, int y, char text[]){
+  int length = strlen(text);
+  x = x-length*3;
+  u8g2.drawStr(x,y,text);
+}
+
+void drawFace(int face){
+  switch(face){
+    case 1: u8g2.drawXBMP(img_x,img_y,img_width,img_height, NoLight); break;//No Light
+    case 2: u8g2.drawXBMP(img_x,img_y,img_width,img_height, NoWater); break;//No Water
+    case 3: u8g2.drawXBMP(img_x,img_y,img_width,img_height, NoTemp); break;//No temp
+    case 4: u8g2.drawXBMP(img_x,img_y,img_width,img_height, EnoughLight); break;//Enough Light
+    case 5: u8g2.drawXBMP(img_x,img_y,img_width,img_height, EnoughWater); break;//Neutral
+    case 6: u8g2.drawXBMP(img_x,img_y,img_width,img_height, EnoughTemp); break;//Enough Temp
+    case 7: u8g2.drawXBMP(img_x,img_y,img_width,img_height, TooMuchLight); break;//Too Much Light
+    case 8: u8g2.drawXBMP(img_x,img_y,img_width,img_height, TooMuchWater); break;//Too Much Water
+    case 9: u8g2.drawXBMP(img_x,img_y,img_width,img_height, TooMuchTemp); break;//Too Much Temp
+  }
+}
 
 void getvalues(){
 
-  Serial.print("mois:");
+  // Serial.print("mois:");
   mois = map(analogRead(sensorPin), 0, 4095, 100, 0);
-  Serial.print(mois);
-  Serial.print(",");
-  Serial.print("licht:");
+  // Serial.print(mois);
+  // Serial.print(",");
+  // Serial.print("licht:");
   licht = map(analogRead(sensorLicht), 0, 4095, 0, 100);
-  Serial.print(licht);
-  Serial.print(",");
-  Serial.print("temp:");
+  // Serial.print(licht);
+  // Serial.print(",");
+  // Serial.print("temp:");
   int sensorVal = analogRead(sensorTemp);
   float voltage = sensorVal / 4095.0;
   temperature = (voltage - 0.5) * 100;
-  Serial.println(temperature);
+  // Serial.println(temperature);
   delay(100);
 }
 
@@ -93,40 +156,21 @@ void setupWifi(){
 }
 
 void SendPOSTrequest(){
-    //Send an HTTP POST request every 10 minutes
   if ((millis() - lastTime) > timerDelay) {
-    //Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
       HTTPClient http;
     
-      // Your Domain name with URL path or IP address with path
       http.begin(client, serverName);
       
-      // If you need Node-RED/server authentication, insert user and password below
-      //http.setAuthorization("REPLACE_WITH_SERVER_USERNAME", "REPLACE_WITH_SERVER_PASSWORD");
-      
-      // // Specify content-type header
-      // http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-      // // Data to send with HTTP POST
-      // String httpRequestData = "id=2&name=test&temp=10&lightLevel=24&waterLevel=49.54&waterLevel=50";
-      // // Send HTTP POST request
-      // int httpResponseCode = http.POST(httpRequestData);
-      
-      // If you need an HTTP request with a content type: application/json, use the following:
       post = "{\"id\":\"2\",\"name\":\"test\",\"temp\":\""+ String(temperature) +"\",\"lightLevel\":\""+ String(licht) +"\",\"waterLevel\":\""+ String(mois) +"\",\"happyness\":\"0\"}";
 
       http.addHeader("Content-Type", "application/json");
       int httpResponseCode = http.POST(post);
-
-      // If you need an HTTP request with a content type: text/plain
-      //http.addHeader("Content-Type", "text/plain");
-      //int httpResponseCode = http.POST("Hello, World!");
      
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
         
-      // Free resources
       http.end();
     }
     else {
