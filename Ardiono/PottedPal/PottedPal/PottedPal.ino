@@ -125,19 +125,19 @@ void drawFace(int face){
 
 void getvalues(){
 
-  // Serial.print("mois:");
+  Serial.print("mois:");
   mois = map(analogRead(sensorPin), 0, 4095, 100, 0);
-  // Serial.print(mois);
-  // Serial.print(",");
-  // Serial.print("licht:");
+  Serial.print(mois);
+  Serial.print(",");
+  Serial.print("licht:");
   licht = map(analogRead(sensorLicht), 0, 4095, 0, 100);
-  // Serial.print(licht);
-  // Serial.print(",");
-  // Serial.print("temp:");
+  Serial.print(licht);
+  Serial.print(",");
+  Serial.print("temp:");
   int sensorVal = analogRead(sensorTemp);
   float voltage = sensorVal / 4095.0;
   temperature = (voltage - 0.5) * 100;
-  // Serial.println(temperature);
+  Serial.println(temperature);
   delay(100);
 }
 
