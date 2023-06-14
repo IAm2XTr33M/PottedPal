@@ -37,36 +37,36 @@ float mois = 0;
 
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   pinMode(sensorPin, INPUT);
   pinMode(sensorLicht, INPUT);
   pinMode(sensorTemp, INPUT);
 
-  setupWifi();
+  //setupWifi();
 }
 
 void loop() {
   getvalues();
-  SendPOSTrequest();
+  //SendPOSTrequest();
 
 
-  Delay(10);
+  delay(10);
 }
 
 void getvalues(){
 
   Serial.print("mois:");
-  mois = map(analogRead(sensorPin), 0, 4095, 0, 100)
+  mois = map(analogRead(sensorPin), 0, 4095, 100, 0);
   Serial.print(mois);
   Serial.print(",");
   Serial.print("licht:");
-  licht = map(analogRead(sensorLicht), 0, 4095, 0, 100)
+  licht = map(analogRead(sensorLicht), 0, 4095, 0, 100);
   Serial.print(licht);
   Serial.print(",");
   Serial.print("temp:");
   int sensorVal = analogRead(sensorTemp);
-  float voltage = (sensorVal / 4095.0) * 5.0;
-  temperature = (voltage - .5) * 100;
+  float voltage = sensorVal / 1023.0;
+  temperature = (voltage - 0.5) * 100;
   Serial.println(temperature);
   delay(100);
 }

@@ -14,21 +14,16 @@ void setup() {
 
 void loop() {
   Serial.print("mois:");
-  Serial.print(map(analogRead(sensorPin), 0, 4095, 0, 100));
+  Serial.print(map(analogRead(sensorPin), 0, 4095, 100, 0));
   Serial.print(",");
   Serial.print("licht:");
   Serial.print(map(analogRead(sensorLicht), 0, 4095, 0, 100));
   Serial.print(",");
   Serial.print("temp:");
   int sensorVal = analogRead(sensorTemp);
-  float voltage = (sensorVal / 4095.0) * 5.0;
-  float temperature = (voltage - .5) * 100;
+  float voltage = sensorVal / 1023.0;
+  float temperature = (voltage - 0.5) * 100;
   Serial.println(temperature);
-  delay(100);
+  delay(1000);
 }
 
-
-float temp(){
-  float voltage = (sensorTemp / 1024.0) * 5.0;
-
-}
